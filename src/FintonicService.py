@@ -6,7 +6,7 @@ class FintonicService:
     PARAMS = {
         "pageLimit": 0,
         "pageOffset": 0,
-        "read": "false"
+        "read": "true"
     }
     HEADERS = {
         "authority": "api.fintonic.com",
