@@ -26,13 +26,16 @@ class Listing:
                 exit()
 
             if session._page is not None:
-                
-                response = session._page.context.request.get(
-                    url= self.LISTING_URL,
-                    params=self._params,
-                    headers=self._headers,
-                )
+                try:
+                    response = session._page.context.request.get(
+                        url= self.LISTING_URL,
+                        params=self._params,
+                        headers=self._headers,
+                    )
 
-                assert response.ok
+                    assert response.ok
+                except:
+                    print("There was error getting Listing. Check USERNAME and PASSWORD parameters.")
+                    exit()
 
                 return response.json()

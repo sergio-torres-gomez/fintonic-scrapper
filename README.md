@@ -4,7 +4,9 @@
   
     USERNAME=your_fintonic_username
     PASSWORD=your_fintonic_password
-  
+    #Enable for debug mode
+    #DEBUG=True
+
 ### Executing script
   
     python3 sync.py

@@ -1,9 +1,16 @@
 import os
+from dotenv import load_dotenv
 
 SESSION_FILE = '/tmp/state.json'
 
 def initPage(p):
-    browser = p.chromium.launch()
+    load_dotenv()
+    DEBUG = os.getenv("DEBUG") == "True"
+    if DEBUG:
+        browser = p.chromium.launch(headless=False, slow_mo=100)
+    else:
+        browser = p.chromium.launch()
+
     context = getContext(browser)
     page = context.new_page()
     page.context.storage_state(path=SESSION_FILE)

@@ -1,5 +1,6 @@
 import time
 import os
+from dotenv import load_dotenv
 
 # Metaclase para convertir la clase en Singleton
 class SingletonMeta(type):
@@ -15,8 +16,8 @@ class Auth(object, metaclass=SingletonMeta):
 
     LOGIN_URL = "https://www.fintonic.com/private/login"
     VERIFY_URL = "https://www.fintonic.com/private/verify"
-    USERNAME = os.getenv("USERNAME")
-    PASSWORD = os.getenv("PASSWORD")
+    USERNAME = None
+    PASSWORD = None
 
     _headers = {
         'accept': 'application/vnd.fintonic-v7+json',
@@ -30,6 +31,9 @@ class Auth(object, metaclass=SingletonMeta):
 
     def __init__(self, page):
         self._page = page
+        load_dotenv()
+        self.USERNAME = os.getenv("USERNAME")
+        self.PASSWORD = os.getenv("PASSWORD")
 
     def __closeCookies(self):
         if self._page is not None:
