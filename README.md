@@ -15,6 +15,8 @@
     AWS_S3_ACCESS_KEY=s3_access_key
     AWS_S3_SECRET_KEY=s3_secret_key
 
+    SYNC_API_ENDPOINT=endpoint_url_to_api_sync_movements
+
 ### Executing script
   
     python3 sync.py

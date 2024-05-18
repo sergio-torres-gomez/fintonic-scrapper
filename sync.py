@@ -22,7 +22,7 @@ listings = fintonicService.getListings()
 
 ### IMPORT DATA
 
-url = "http://localhost:8000/api/sync"
+url = os.getenv("SYNC_API_ENDPOINT")
 
 payload=listings
 headers = {'Content-type': 'application/json'}
