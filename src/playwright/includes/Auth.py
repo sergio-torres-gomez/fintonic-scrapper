@@ -1,6 +1,7 @@
 import time
 import os
 from dotenv import load_dotenv
+from src.functions import exit_application
 
 # Metaclase para convertir la clase en Singleton
 class SingletonMeta(type):
@@ -49,8 +50,7 @@ class Auth(object, metaclass=SingletonMeta):
                 self._page.click('.MuiButton-containedPrimary')
                 time.sleep(3)
             except:
-                print("There was an error verificating device.")
-                exit()
+                exit_application("There was an error verificating device.")
 
     def __saveBearerToken(self):
         if self._page is not None:
@@ -64,8 +64,7 @@ class Auth(object, metaclass=SingletonMeta):
 
     def login(self, session_file):
         if self.USERNAME is None or self.PASSWORD is None:
-            print("Fill USERNAME and PASSWORD parameters in .env file.")
-            exit()
+            exit_application("Fill USERNAME and PASSWORD parameters in .env file.")
         if self._page is not None:
             self._page.goto(self.LOGIN_URL)
             self.__closeCookies()
@@ -96,5 +95,4 @@ class Auth(object, metaclass=SingletonMeta):
             
             self.__saveContext(session_file=session_file)
         else:
-            print("There was an error with sync_playwright")
-            exit()
+            exit_application("There was an error with sync_playwright")

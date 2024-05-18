@@ -21,7 +21,16 @@ class FintonicService:
         "sec-fetch-site": "same-site",
     }
 
+    def __init__(self, AWSService):
+        self.AWSService = AWSService
+
     def getListings(self):
         print("Getting listings information.")
-        listing = Listing(listing_url=self.LISTING_URL, params=self.PARAMS, headers=self.HEADERS)
+        listing = Listing(
+            listing_url=self.LISTING_URL, 
+            params=self.PARAMS, 
+            headers=self.HEADERS,
+            AWSService=self.AWSService
+        )
+
         return listing.getListings()
