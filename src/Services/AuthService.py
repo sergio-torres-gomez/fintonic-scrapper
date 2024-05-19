@@ -41,7 +41,9 @@ class AuthService:
 
         return self.PASSWORD
 
-    def changeUsernameAndPassword(self, PLAIN_ACCOUNT):
+    def changeUsernameAndPassword(self, username, password):
+        PLAIN_TEXT_ACCOUNT = "|".join([username, password]).encode('utf-8')
+
         aws = AWSService()
         encrypt = EncryptService()
         # Generar y guardar una clave de cifrado
@@ -51,7 +53,7 @@ class AuthService:
         aws.uploadText(text=key, file_name=self.KEY_FILE)
 
         # Cifrar datos
-        encrypt_text = encrypt.encrypt(key=key, plain_text=PLAIN_ACCOUNT)
+        encrypt_text = encrypt.encrypt(key=key, plain_text=PLAIN_TEXT_ACCOUNT)
 
         # Subir a S3 el archivo cifrado
         aws.uploadText(text=encrypt_text, file_name=self.ENC_FILE)

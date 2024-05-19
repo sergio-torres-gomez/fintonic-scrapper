@@ -10,9 +10,7 @@ if len(args) != 3:
 username = args[1]
 password = args[2]
 
-PLAIN_ACCOUNT = "|".join([username, password]).encode('utf-8')
-
 auth = AuthService()
-auth.changeUsernameAndPassword(PLAIN_ACCOUNT)
+auth.changeUsernameAndPassword(username, password)
 
 print("Accesos cambiados correctamente.")
