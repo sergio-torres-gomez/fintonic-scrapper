@@ -2,6 +2,7 @@ import time
 import os
 from dotenv import load_dotenv
 from src.functions import exit_application
+from src.Services.AuthService import AuthService
 
 # Metaclase para convertir la clase en Singleton
 class SingletonMeta(type):
@@ -17,8 +18,7 @@ class Auth(object, metaclass=SingletonMeta):
 
     LOGIN_URL = "https://www.fintonic.com/private/login"
     VERIFY_URL = "https://www.fintonic.com/private/verify"
-    USERNAME = None
-    PASSWORD = None
+    SESSION_FILE = None
 
     _headers = {
         'accept': 'application/vnd.fintonic-v7+json',
@@ -33,8 +33,8 @@ class Auth(object, metaclass=SingletonMeta):
     def __init__(self, page):
         self._page = page
         load_dotenv()
-        self.USERNAME = os.getenv("USERNAME")
-        self.PASSWORD = os.getenv("PASSWORD")
+
+        self.SESSION_FILE = os.getenv("SESSION_FILE")
 
     def __closeCookies(self):
         if self._page is not None:
@@ -62,8 +62,12 @@ class Auth(object, metaclass=SingletonMeta):
         if self._page is not None:
             self._page.context.storage_state(path=session_file)
 
-    def login(self, session_file):
-        if self.USERNAME is None or self.PASSWORD is None:
+    def login(self):
+        auth = AuthService()
+        USERNAME = auth.getUsername()
+        PASSWORD = auth.getPassword()
+
+        if USERNAME is None or PASSWORD is None:
             exit_application("Fill USERNAME and PASSWORD parameters in .env file.")
         if self._page is not None:
             self._page.goto(self.LOGIN_URL)
@@ -74,13 +78,13 @@ class Auth(object, metaclass=SingletonMeta):
                 userIntrduced = self._page.query_selector('#usernameForm') == None
                 print("Logging...")
                 if not userIntrduced:
-                    self._page.fill('#usernameForm', self.USERNAME)
+                    self._page.fill('#usernameForm', USERNAME)
                     self._page.click('#loginButton')
                     time.sleep(3)
-                self._page.fill('#password0', [*self.PASSWORD][0])
-                self._page.fill('#password1', [*self.PASSWORD][1])
-                self._page.fill('#password2', [*self.PASSWORD][2])
-                self._page.fill('#password3', [*self.PASSWORD][3])
+                self._page.fill('#password0', [*PASSWORD][0])
+                self._page.fill('#password1', [*PASSWORD][1])
+                self._page.fill('#password2', [*PASSWORD][2])
+                self._page.fill('#password3', [*PASSWORD][3])
                 self._page.click('#passwordButton')
             else:
                 print("User is already logged in.")
@@ -93,6 +97,6 @@ class Auth(object, metaclass=SingletonMeta):
             if doubleVerification:
                 self.__verificateDevice()
             
-            self.__saveContext(session_file=session_file)
+            self.__saveContext(session_file=self.SESSION_FILE)
         else:
             exit_application("There was an error with sync_playwright")

@@ -11,26 +11,24 @@ class Listing:
     _params = {}
     _headers = {}
 
-    def __init__(self, listing_url, params, headers, AWSService):
+    def __init__(self, listing_url, params, headers):
         self.LISTING_URL = listing_url
         self._params = params
         self._headers = headers
-        self.AWSService = AWSService
 
     def getListings(self):
         load_dotenv()
-        SESSION_FILE = os.getenv("SESSION_FILE")
         with sync_playwright() as p:
             page = playwright.initPage(p)
             session = Auth(page)
-            session.login(session_file=SESSION_FILE)
+            session.login()
 
             if session._bearer != "":
                 self._headers["authorization"] = "Bearer "+session._bearer
             else:
                 exit_application("There was error getting auth token.")
 
-            playwright.uploadContext(self.AWSService)
+            playwright.uploadContext()
 
             if session._page is not None:
                 try:

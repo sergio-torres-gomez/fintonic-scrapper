@@ -1,27 +1,21 @@
 import os
 from dotenv import load_dotenv
-from src.AWSService import *
-from src.FintonicService import *
+from src.Services.AWSService import AWSService
+from src.Services.FintonicService import FintonicService
 import requests
+from src.functions import exit_application
 
 ### AWS SESSION
+aws = AWSService()
 
-load_dotenv()
+aws.downloadSessionFile()
 
-AWSService = AWSService(
-    bucket_name=os.getenv("AWS_S3_BUCKET_NAME"),
-    file_name=os.getenv("AWS_S3_FILE_NAME"),
-    session_file=os.getenv("SESSION_FILE")
-)
-
-AWSService.downloadFile()
-
-fintonicService = FintonicService(AWSService)
+fintonicService = FintonicService()
 listings = fintonicService.getListings()
 
 
 ### IMPORT DATA
-
+load_dotenv()
 url = os.getenv("SYNC_API_ENDPOINT")
 
 payload=listings

@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from src.Services.AWSService import AWSService
 
 def initPage(p):
     load_dotenv()
@@ -28,5 +29,6 @@ def getContext(browser, SESSION_FILE):
     
     return context
 
-def uploadContext(AWSService):
-    AWSService.uploadFile()
+def uploadContext():
+    aws = AWSService()
+    aws.uploadSessionFile()

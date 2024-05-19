@@ -1,9 +1,6 @@
 # fintonic-scrapper
 ## How to use:
 ### First of all, prepare .env file
-  
-    USERNAME=your_fintonic_username
-    PASSWORD=your_fintonic_password
     #Enable for debug mode
     #DEBUG=True
 
@@ -14,6 +11,9 @@
     AWS_S3_FILE_NAME=session_file_name.json
     AWS_S3_ACCESS_KEY=s3_access_key
     AWS_S3_SECRET_KEY=s3_secret_key
+
+    KEY_FILE=name_key_file
+    ENC_FILE=name_encripted_file
 
     SYNC_API_ENDPOINT=endpoint_url_to_api_sync_movements
 
