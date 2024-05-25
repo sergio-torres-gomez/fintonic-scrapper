@@ -13,4 +13,4 @@ password = args[2]
 auth = AuthService()
 auth.changeUsernameAndPassword(username, password)
 
-print("Accesos cambiados correctamente.")
+print("Credentials changed successfully.")

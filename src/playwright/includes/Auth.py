@@ -2,7 +2,9 @@ import time
 import os
 from dotenv import load_dotenv
 from src.functions import exit_application
+from src.Services.ApiService import ApiService
 from src.Services.AuthService import AuthService
+import src.playwright.includes.PlaywrightContext as playwright
 
 # Metaclase para convertir la clase en Singleton
 class SingletonMeta(type):
@@ -19,11 +21,8 @@ class Auth(object, metaclass=SingletonMeta):
     LOGIN_URL = "https://www.fintonic.com/private/login"
     VERIFY_URL = "https://www.fintonic.com/private/verify"
     SESSION_FILE = None
-
-    _headers = {
-        'accept': 'application/vnd.fintonic-v7+json',
-        'authorization': False,
-    }
+    # In seconds
+    TIME_TO_2FA = 90
 
     _cookies = {}
     _page = None
@@ -42,9 +41,21 @@ class Auth(object, metaclass=SingletonMeta):
             if closeButton != None:
                 self._page.click("#CybotCookiebotDialogBodyButtonAccept")
 
+    def __waitTimeTo2FA(self):
+        time.sleep(self.TIME_TO_2FA)
+
+    def __getVerificationCode(self):
+        apiService = ApiService()
+        apiService.sent2FACodePetitionToApi(self.TIME_TO_2FA)
+        print("Waiting for 2FA...")
+        self.__waitTimeTo2FA()
+        print("Getting verification code...")
+
+        return apiService.getVerificationCode()['code']
+
     def __verificateDevice(self):
         if self._page is not None:
-            verificationCode = input("Enter Verification Code recibed by sms:")
+            verificationCode = self.__getVerificationCode()
             try:
                 self._page.fill('.MuiInput-input', verificationCode)
                 self._page.click('.MuiButton-containedPrimary')
@@ -62,6 +73,19 @@ class Auth(object, metaclass=SingletonMeta):
         if self._page is not None:
             self._page.context.storage_state(path=session_file)
 
+    def checkIfUserIsLoggedIn(self):
+        print("Checking if user is logged in...")
+        if self._page is not None:
+            self._page.goto(self.LOGIN_URL)
+            self.__closeCookies()
+            self.__saveBearerToken()
+            self.__saveContext(session_file=self.SESSION_FILE)
+            # ingresar las credenciales de inicio de sesión
+            return self._page.url != self.LOGIN_URL
+            
+        else:
+            exit_application("There was an error with sync_playwright")
+
     def login(self):
         auth = AuthService()
         USERNAME = auth.getUsername()
@@ -72,22 +96,17 @@ class Auth(object, metaclass=SingletonMeta):
         if self._page is not None:
             self._page.goto(self.LOGIN_URL)
             self.__closeCookies()
-            # ingresar las credenciales de inicio de sesión
-            isLoggedIn = self._page.url != self.LOGIN_URL
-            if not isLoggedIn:
-                userIntrduced = self._page.query_selector('#usernameForm') == None
-                print("Logging...")
-                if not userIntrduced:
-                    self._page.fill('#usernameForm', USERNAME)
-                    self._page.click('#loginButton')
-                    time.sleep(3)
-                self._page.fill('#password0', [*PASSWORD][0])
-                self._page.fill('#password1', [*PASSWORD][1])
-                self._page.fill('#password2', [*PASSWORD][2])
-                self._page.fill('#password3', [*PASSWORD][3])
-                self._page.click('#passwordButton')
-            else:
-                print("User is already logged in.")
+            userIntrduced = self._page.query_selector('#usernameForm') == None
+            print("Logging...")
+            if not userIntrduced:
+                self._page.fill('#usernameForm', USERNAME)
+                self._page.click('#loginButton')
+                time.sleep(3)
+            self._page.fill('#password0', [*PASSWORD][0])
+            self._page.fill('#password1', [*PASSWORD][1])
+            self._page.fill('#password2', [*PASSWORD][2])
+            self._page.fill('#password3', [*PASSWORD][3])
+            self._page.click('#passwordButton')
 
             time.sleep(5)
             
@@ -98,5 +117,13 @@ class Auth(object, metaclass=SingletonMeta):
                 self.__verificateDevice()
             
             self.__saveContext(session_file=self.SESSION_FILE)
+
+            playwright.uploadContext()
+
+            if self._bearer != "":
+                return self._bearer
+            else:
+                exit_application("There was error getting auth token.")
+
         else:
             exit_application("There was an error with sync_playwright")

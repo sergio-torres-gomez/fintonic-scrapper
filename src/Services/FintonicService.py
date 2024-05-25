@@ -1,4 +1,6 @@
 from src.playwright.Listing import *
+from src.Services.ApiService import ApiService
+from playwright.sync_api import sync_playwright
 
 class FintonicService:
 
@@ -21,12 +23,52 @@ class FintonicService:
         "sec-fetch-site": "same-site",
     }
 
+    def __isLoggedInFintonic(self, page):
+        auth = Auth(page)
+
+        return auth.checkIfUserIsLoggedIn()
+
     def getListings(self):
         print("Getting listings information.")
-        listing = Listing(
-            listing_url=self.LISTING_URL, 
-            params=self.PARAMS, 
-            headers=self.HEADERS,
-        )
 
-        return listing.getListings()
+        with sync_playwright() as p:
+            page = playwright.initPage(p)
+            listing = Listing(
+                listing_url=self.LISTING_URL, 
+                params=self.PARAMS, 
+                headers=self.HEADERS,
+                page=page,
+            )
+            
+            if self.__isLoggedInFintonic(page) is False:
+                listing.login()
+
+            return listing.getListings()
+    
+    def isLoggedInInApiOrExit(self):
+        print("Checking if user is logged in API.")
+
+        apiService = ApiService()
+        response = apiService.getLastSession()
+
+        if 'isLoggedIn' in response and response['isLoggedIn']:
+            return
+
+        exit_application("User is not logged in.")
+    
+    def loginFintonic(self):
+        print("Logging in Fintonic.")
+
+        with sync_playwright() as p:
+            page = playwright.initPage(p)
+            listing = Listing(
+                listing_url=self.LISTING_URL, 
+                params=self.PARAMS, 
+                headers=self.HEADERS,
+                page=page,
+            )
+            
+            if self.__isLoggedInFintonic(page) is False:
+                listing.login()
+            
+            exit_application("User is logged in.")
