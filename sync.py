@@ -10,8 +10,8 @@ fintonicService = FintonicService()
 fintonicService.isLoggedInInApiOrExit()
 
 ### AWS SESSION
-#aws = AWSService()
-#aws.downloadSessionFile()
+aws = AWSService()
+aws.downloadSessionFile()
 
 listings = fintonicService.getListings()
 
