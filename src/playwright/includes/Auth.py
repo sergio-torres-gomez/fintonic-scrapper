@@ -73,6 +73,11 @@ class Auth(object, metaclass=SingletonMeta):
         if self._page is not None:
             self._page.context.storage_state(path=session_file)
 
+    def getBearerToken(self):
+        if self._page == "":
+            exit_application("There was an error getting bearer token. Token is empty.")
+        return self._bearer
+
     def checkIfUserIsLoggedIn(self):
         print("Checking if user is logged in...")
         if self._page is not None:
@@ -120,10 +125,6 @@ class Auth(object, metaclass=SingletonMeta):
 
             playwright.uploadContext()
 
-            if self._bearer != "":
-                return self._bearer
-            else:
-                exit_application("There was error getting auth token.")
-
+            return self.getBearerToken()
         else:
             exit_application("There was an error with sync_playwright")

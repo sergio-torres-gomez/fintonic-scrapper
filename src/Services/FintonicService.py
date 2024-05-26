@@ -25,14 +25,20 @@ class FintonicService:
 
     def __isLoggedInFintonic(self, page):
         auth = Auth(page)
+        isLoggedIn = auth.checkIfUserIsLoggedIn()
 
-        return auth.checkIfUserIsLoggedIn()
+        if isLoggedIn:
+            self.HEADERS["authorization"] = "Bearer "+auth.getBearerToken()
+        
+        return isLoggedIn
 
     def getListings(self):
         print("Getting listings information.")
 
         with sync_playwright() as p:
             page = playwright.initPage(p)
+            isLoggedIn = self.__isLoggedInFintonic(page)
+
             listing = Listing(
                 listing_url=self.LISTING_URL, 
                 params=self.PARAMS, 
@@ -40,7 +46,7 @@ class FintonicService:
                 page=page,
             )
             
-            if self.__isLoggedInFintonic(page) is False:
+            if isLoggedIn is False:
                 listing.login()
 
             return listing.getListings()
