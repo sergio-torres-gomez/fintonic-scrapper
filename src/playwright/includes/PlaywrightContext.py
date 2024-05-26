@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from src.Services.AWSService import AWSService
 
+TIMEOUT = 120000
+
 def initPage(p):
     load_dotenv()
     SESSION_FILE = os.getenv("SESSION_FILE")
@@ -13,6 +15,7 @@ def initPage(p):
 
     context = getContext(browser, SESSION_FILE)
     page = context.new_page()
+    page.set_default_timeout(TIMEOUT)
     page.context.storage_state(path=SESSION_FILE)
     return page 
 
