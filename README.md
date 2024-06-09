@@ -17,6 +17,8 @@
 
     SYNC_API_ENDPOINT=endpoint_url_to_api_sync_movements
     LAST_SESSION_API_URL=endpoint_url_to_api_last_session
+    GET_2FA_CODE_URL=endpoint_url_to_api_get_2fa_code
+    SET_2FA_CODE_PETITION_URL=endpoint_url_to_api_set_2fa_code
 
 ### Executing script
   
