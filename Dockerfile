@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN playwright install 
 RUN playwright install-deps
 
-CMD ["python3", "sync.py"]
+CMD ["python3", "loginFintonic.py"]
