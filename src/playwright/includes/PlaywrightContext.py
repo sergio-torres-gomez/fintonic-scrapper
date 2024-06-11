@@ -11,7 +11,7 @@ def initPage(p):
     if DEBUG:
         browser = p.chromium.launch(headless=False, slow_mo=100)
     else:
-        browser = p.chromium.launch()
+        browser = p.chromium.launch(headless=True, args=["--single-process", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox"])
 
     context = getContext(browser, SESSION_FILE)
     page = context.new_page()
