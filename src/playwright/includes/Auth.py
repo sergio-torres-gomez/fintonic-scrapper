@@ -51,17 +51,18 @@ class Auth(object, metaclass=SingletonMeta):
         self.__waitTimeTo2FA()
         print("Getting verification code...")
 
-        return apiService.getVerificationCode()['code']
+        return apiService.getVerificationCode()
 
     def __verificateDevice(self):
         if self._page is not None:
             verificationCode = self.__getVerificationCode()
+            print("Verifying device with code " + verificationCode + ".")
             try:
                 self._page.fill('.MuiInput-input', verificationCode)
                 self._page.click('.MuiButton-containedPrimary')
                 time.sleep(3)
-            except:
-                exit_application("There was an error verificating device.")
+            except Exception as error:
+                exit_application("There was an error verificating device. Error: " + str(error))
 
     def __saveBearerToken(self):
         if self._page is not None:
