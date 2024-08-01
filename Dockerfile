@@ -9,4 +9,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN playwright install-deps
 RUN playwright install 
 
-CMD ["python3", "loginFintonic.py"]
+# Install the runtime interface client
+RUN pip install  \
+    --target . \
+    awslambdaric
+
+
+ENTRYPOINT [ "/usr/bin/python", "-m", "awslambdaric" ]
+CMD ["loginFintonic.lambda_handler"]
