@@ -1,0 +1,5 @@
+playwright
+python-dotenv
+requests
+boto3
+cryptography

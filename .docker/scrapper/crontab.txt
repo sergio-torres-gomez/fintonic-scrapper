@@ -1,0 +1,1 @@
+0 */2 * * * python3 /usr/src/scrapper/sync.py >> /var/log/cron.log 2>&1

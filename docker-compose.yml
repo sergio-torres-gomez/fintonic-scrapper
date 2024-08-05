@@ -1,0 +1,18 @@
+# FOR SCRAPPER
+version: '3.5'
+
+services:
+  fintonic_scrapper:
+    container_name: Fintonic-Scrapper
+    build: .docker/scrapper
+    restart: always
+    volumes:
+      - .:/usr/src/scrapper:ro
+    networks:
+      # Proxy network
+      - www_default
+
+networks:
+  # Proxy network
+  www_default:
+    external: true
