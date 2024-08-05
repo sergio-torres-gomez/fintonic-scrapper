@@ -9,7 +9,7 @@ def initPage(p):
     SESSION_FILE = os.getenv("SESSION_FILE")
     DEBUG = os.getenv("DEBUG") == "True"
     if DEBUG:
-        browser = p.chromium.launch(headless=False, slow_mo=100)
+        browser = p.chromium.launch(headless=True, args=["--single-process", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox"])
     else:
         browser = p.chromium.launch(headless=True, args=["--single-process", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox"])
 

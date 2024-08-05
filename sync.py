@@ -19,8 +19,6 @@ listings = fintonicService.getListings()
 ### IMPORT DATA
 
 apiService = ApiService()
-response = apiService.importMovements(listings)
-
-print(response.text)
+apiService.importMovements(listings)
 
 exit_application("Process finished")

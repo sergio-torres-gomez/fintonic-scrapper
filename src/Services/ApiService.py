@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import requests
 from src.functions import exit_application
 from datetime import datetime, timedelta
+import json
 
 class ApiService:
 
@@ -11,6 +12,7 @@ class ApiService:
     GET_2FA_CODE_URL = None
     SET_2FA_CODE_PETITION_URL = None
     DEBUG = False
+    API_CHUNK_SIZE = 1000
 
     def __init__(self):
         load_dotenv()
@@ -48,7 +50,21 @@ class ApiService:
         url = self.IMPORT_MOVEMENTS_URL
 
         try:
-            return self.__doPostJson(url, listings)
+            if 'resultList' in listings:
+                result_list = listings['resultList']
+
+                for i in range(0, len(result_list), self.API_CHUNK_SIZE):
+                    chunk = result_list[i:i + self.API_CHUNK_SIZE]
+                    data = {
+                        "count": len(chunk),
+                        "resultList": chunk
+                    }
+
+                    response = self.__doPostJson(url, data)
+
+                    print(response.text)
+
+                print("Movements imported successfully.")
         except:
             exit_application("Error connecting to import data API. URL: " + url)
 
