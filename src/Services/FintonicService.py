@@ -76,5 +76,3 @@ class FintonicService:
             
             if self.__isLoggedInFintonic(page) is False:
                 listing.login()
-            
-            exit_application("User is logged in.")

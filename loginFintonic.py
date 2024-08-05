@@ -2,6 +2,7 @@ from src.Services.AWSService import AWSService
 from src.Services.FintonicService import FintonicService
 import json
 from src.Exeptions.ExitApplicationException import ExitApplicationException
+from src.Services.ApiService import ApiService
 
 
 def lambda_handler(event, context):
@@ -12,6 +13,9 @@ def lambda_handler(event, context):
 
         fintonicService = FintonicService()
         fintonicService.loginFintonic()
+
+        apiService = ApiService()
+        apiService.setApiAsLoggedIn()
 
         return {
             'statusCode': 200,

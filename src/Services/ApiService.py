@@ -73,7 +73,7 @@ class ApiService:
         except Exception as error:
             exit_application("Error connecting to API trying to get verification code. Error: " + str(error))
 
-    def sent2FACodePetitionToApi(self, timeTo2FA):
+    def send2FACodePetitionToApi(self, timeTo2FA):
         print("Sending 2FA code...")
         url = self.SET_2FA_CODE_PETITION_URL
         sentDate = datetime.now()
@@ -90,3 +90,20 @@ class ApiService:
             return self.__doPostJson(url, new2FAPetition)
         except:
             exit_application("Error connecting to API trying to sent 2FA code petition. URL: " + url)
+
+    def setApiAsLoggedIn(self):
+        print("Setting API as logged in...")
+        url = self.SET_2FA_CODE_PETITION_URL
+        sentDate = datetime.now()
+
+        new2FAPetition = {
+            "isLoggedIn": True,
+            "isSmsSent": False, 
+            "smsSentDate": sentDate.strftime("%Y-%m-%d %H:%M:%S"),
+            "smsExpirationDate": sentDate.strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+        try:
+            return self.__doPostJson(url, new2FAPetition)
+        except:
+            exit_application("Error connecting to API trying to set API as logged in. URL: " + url)

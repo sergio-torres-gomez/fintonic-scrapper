@@ -46,7 +46,7 @@ class Auth(object, metaclass=SingletonMeta):
 
     def __getVerificationCode(self):
         apiService = ApiService()
-        apiService.sent2FACodePetitionToApi(self.TIME_TO_2FA)
+        apiService.send2FACodePetitionToApi(self.TIME_TO_2FA)
         print("Waiting for 2FA...")
         self.__waitTimeTo2FA()
         print("Getting verification code...")
