@@ -23,6 +23,12 @@
 ### Executing script
   
     python3 sync.py
+
+### Crontab for automatic sync
+
+  First of all sync.sh must have execution permission.
+
+    0 */2 * * *  /usr/src/scrapper/sync.sh >> /var/log/cron.log 2>&1
   
 
 ##### Note:
