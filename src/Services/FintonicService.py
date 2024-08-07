@@ -7,8 +7,7 @@ class FintonicService:
     LISTING_URL = "https://api.fintonic.com/finapi/rest/transaction/list"
     PARAMS = {
         "pageLimit": 0,
-        "pageOffset": 0,
-        "read": "true"
+        "pageOffset": 0
     }
     HEADERS = {
         "authority": "api.fintonic.com",
