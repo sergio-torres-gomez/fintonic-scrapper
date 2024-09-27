@@ -17,5 +17,7 @@ RUN pip install  \
 
 COPY . .
 
+RUN chmod +x /usr/src/sync.sh
+
 ENTRYPOINT [ "/usr/bin/python", "-m", "awslambdaric" ]
 CMD ["loginFintonic.lambda_handler"]
