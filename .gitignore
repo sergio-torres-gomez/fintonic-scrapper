@@ -157,3 +157,5 @@ cython_debug/
 
 # Mac
 .DS_STORE
+
+.idea
