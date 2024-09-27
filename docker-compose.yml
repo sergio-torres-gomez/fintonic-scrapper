@@ -6,6 +6,8 @@ services:
     container_name: Fintonic-Scrapper
     build: .docker/scrapper
     restart: always
+    volumes:
+      - .:/usr/src/scrapper:ro
     networks:
       # Proxy network
       - www_default
