@@ -12,6 +12,8 @@ RUN playwright install chromium
 
 RUN apt-get update && apt-get install -y cron
 
+RUN chmod +x /usr/src/sync.sh
+
 # Create the cron job
 COPY crontab.txt /etc/cron.d/cronjobs
 RUN chmod 0644 /etc/cron.d/cronjobs
